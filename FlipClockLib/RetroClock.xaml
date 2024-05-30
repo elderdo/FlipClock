@@ -1,0 +1,212 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:Controls="clr-namespace:Standard.Controls">
+
+    <Controls:DoubleAddOperationConverter x:Key="_AddConverter" />
+    <Controls:DoubleMultiplyOperationConverter x:Key="_MultiplyConverter" />
+    <Controls:VisibilityConverter x:Key="_VisibilityConverter" />
+    <LinearGradientBrush x:Key="_TopGlass"
+                         StartPoint="0.5,0"
+                         EndPoint="0.5,1.0">
+        <LinearGradientBrush.GradientStops>
+            <GradientStop Color="#44FFFFFF"
+                          Offset="0.25" />
+            <GradientStop Color="#23000000"
+                          Offset="0.45" />
+            <GradientStop Color="#50FFFFFF"
+                          Offset="0.5" />
+            <GradientStop Color="#03000000"
+                          Offset="1" />
+        </LinearGradientBrush.GradientStops>
+    </LinearGradientBrush>
+    <Style TargetType="{x:Type Controls:RetroClock}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Controls:RetroClock}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0"
+                                  Margin="0,0,5,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Canvas Grid.Column="0"
+                                        Width="{Binding ElementName=_OuterHourPanel, Path=ActualWidth}"
+                                        Height="{Binding ElementName=_OuterHourPanel, Path=ActualHeight}"
+                                        Grid.Row="0">
+                                    <Rectangle RadiusX="8"
+                                               RadiusY="8"
+                                               x:Name="_OuterHourPanel"
+                                               Canvas.Top="0"
+                                               Width="{Binding ElementName=_HourPanel, Path=ActualWidth}"
+                                               Height="{Binding ElementName=_HourPanel, Path=ActualHeight, Converter={StaticResource _AddConverter}, ConverterParameter=8}"
+                                               Fill="White"
+                                               Stroke="#c6c6c6"
+                                               StrokeThickness="0.5" />
+                                    <Rectangle RadiusX="8"
+                                               RadiusY="8"
+                                               Canvas.Top="2"
+                                               Width="{Binding ElementName=_HourPanel, Path=ActualWidth}"
+                                               Height="{Binding ElementName=_HourPanel, Path=ActualHeight, Converter={StaticResource _AddConverter}, ConverterParameter=4}"
+                                               Fill="White"
+                                               Stroke="#c6c6c6"
+                                               StrokeThickness="0.5" />
+                                    <Border Canvas.Top="4"
+                                            Width="{Binding ElementName=_HourPanel, Path=ActualWidth}"
+                                            Height="{Binding ElementName=_HourPanel, Path=ActualHeight}"
+                                            Panel.ZIndex="5"
+                                            Background="{StaticResource _TopGlass}"></Border>
+                                    <Rectangle RadiusX="8"
+                                               RadiusY="8"
+                                               x:Name="_HourPanel"
+                                               Canvas.Top="4"
+                                               Height="{Binding ElementName=_HourTextPanel, Path=ActualHeight, Converter={StaticResource _AddConverter}, ConverterParameter=-8}"
+                                               Width="{Binding ElementName=_HourTextPanel, Path=ActualWidth}"
+                                               Fill="White"
+                                               Stroke="#c6c6c6"
+                                               StrokeThickness="0.5" />
+                                    <StackPanel Orientation="Horizontal"
+                                                Background="Transparent"
+                                                RenderTransformOrigin="0.5,0.5"
+                                                x:Name="_HourTextPanel">
+                                        <StackPanel.RenderTransform>
+                                            <ScaleTransform x:Name="_HourTransform" />
+                                        </StackPanel.RenderTransform>
+                                        <StackPanel.Resources>
+                                            <Storyboard x:Key="_HourFlipStoryboard">
+                                                <DoubleAnimation Duration="0:0:2"
+                                                                 From="1"
+                                                                 To="0.0"
+                                                                 Storyboard.TargetName="_HourTransform"
+                                                                 Storyboard.TargetProperty="ScaleY" />
+                                            </Storyboard>
+                                        </StackPanel.Resources>
+                                        <TextBlock x:Name="_Hour1TextBlock"
+                                                   FontFamily="{TemplateBinding FontFamily}"
+                                                   FontStyle="Normal"
+                                                   Foreground="{TemplateBinding Foreground}"
+                                                   FontWeight="100"
+                                                   Padding="3,3,0,3"
+                                                   Text="{TemplateBinding Hour1}"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                   FontSize="{TemplateBinding FontSize}" />
+                                        <TextBlock x:Name="_Hour2TextBlock"
+                                                   FontFamily="{TemplateBinding FontFamily}"
+                                                   FontStyle="Normal"
+                                                   Foreground="{TemplateBinding Foreground}"
+                                                   FontWeight="100"
+                                                   Text="{TemplateBinding Hour2}"
+                                                   Padding="0,3,3,3"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                   FontSize="{TemplateBinding FontSize}" />
+                                    </StackPanel>
+                                    <Line X1="1"
+                                          X2="{Binding ElementName=_OuterHourPanel, Path=ActualWidth, Converter={StaticResource _AddConverter}, ConverterParameter=-1}"
+                                          Y1="{Binding ElementName=_OuterHourPanel, Path=ActualHeight, Converter={StaticResource _MultiplyConverter}, ConverterParameter=.5}"
+                                          Y2="{Binding ElementName=_OuterHourPanel, Path=ActualHeight, Converter={StaticResource _MultiplyConverter}, ConverterParameter=.5}"
+                                          Stroke="White"
+                                          StrokeThickness="1" />
+                                    <TextBlock x:Name="_AMPMTextBlock"
+                                               Canvas.Left="4"
+                                               Canvas.Top="6"
+                                               Text="PM"
+                                               Visibility="{TemplateBinding IsAmPmVisible, Converter={StaticResource _VisibilityConverter}}"
+                                               FontSize="{Binding ElementName=_Hour1TextBlock, Path=FontSize, Converter={StaticResource _MultiplyConverter}, ConverterParameter=.15}" />
+                                </Canvas>
+                            </Grid>
+                            <Grid Grid.Column="1"
+                                  Margin="5,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Canvas Grid.Column="0"
+                                        Width="{Binding ElementName=_OuterMinutePanel, Path=ActualWidth}"
+                                        Height="{Binding ElementName=_OuterMinutePanel, Path=ActualHeight}"
+                                        Grid.Row="0">
+                                    <Rectangle RadiusX="8"
+                                               RadiusY="8"
+                                               x:Name="_OuterMinutePanel"
+                                               Canvas.Top="0"
+                                               Width="{Binding ElementName=_MinutePanel, Path=ActualWidth}"
+                                               Height="{Binding ElementName=_MinutePanel, Path=ActualHeight, Converter={StaticResource _AddConverter}, ConverterParameter=8}"
+                                               Fill="White"
+                                               Stroke="#c6c6c6"
+                                               StrokeThickness="0.5" />
+                                    <Rectangle RadiusX="8"
+                                               RadiusY="8"
+                                               Canvas.Top="2"
+                                               Width="{Binding ElementName=_MinutePanel, Path=ActualWidth}"
+                                               Height="{Binding ElementName=_MinutePanel, Path=ActualHeight, Converter={StaticResource _AddConverter}, ConverterParameter=4}"
+                                               Fill="White"
+                                               Stroke="#c6c6c6"
+                                               StrokeThickness="0.5" />
+                                    <Border Canvas.Top="4"
+                                            Width="{Binding ElementName=_MinutePanel, Path=ActualWidth}"
+                                            Height="{Binding ElementName=_MinutePanel, Path=ActualHeight}"
+                                            Panel.ZIndex="5"
+                                            Background="{StaticResource _TopGlass}"></Border>
+                                    <Rectangle RadiusX="8"
+                                               RadiusY="8"
+                                               x:Name="_MinutePanel"
+                                               Canvas.Top="4"
+                                               Height="{Binding ElementName=_MinuteTextBlock, Path=ActualHeight, Converter={StaticResource _AddConverter}, ConverterParameter=-8}"
+                                               Width="{Binding ElementName=_MinuteTextBlock, Path=ActualWidth}"
+                                               Fill="White"
+                                               Stroke="#c6c6c6"
+                                               StrokeThickness="0.5" />
+                                    <TextBlock x:Name="_MinuteTextBlock"
+                                               FontFamily="{TemplateBinding FontFamily}"
+                                               FontStyle="Normal"
+                                               Foreground="{TemplateBinding Foreground}"
+                                               FontWeight="100"
+                                               Text="{TemplateBinding Minute}"
+                                               Padding="3"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"
+                                               FontSize="{TemplateBinding FontSize}" />
+                                    <Line X1="1"
+                                          X2="{Binding ElementName=_OuterMinutePanel, Path=ActualWidth, Converter={StaticResource _AddConverter}, ConverterParameter=-1}"
+                                          Y1="{Binding ElementName=_OuterMinutePanel, Path=ActualHeight, Converter={StaticResource _MultiplyConverter}, ConverterParameter=.5}"
+                                          Y2="{Binding ElementName=_OuterMinutePanel, Path=ActualHeight, Converter={StaticResource _MultiplyConverter}, ConverterParameter=.5}"
+                                          Stroke="White"
+                                          StrokeThickness="1" />
+                                </Canvas>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Controls:RetroClock.TimeFormat"
+                                           Value="{x:Static Controls:TimeFormats.Hour12}" />
+                                <Condition Property="Controls:RetroClock.Hour1"
+                                           Value="0" />
+                                <Condition Property="Controls:RetroClock.IncludeLeadingZero"
+                                           Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="TextBlock.Foreground"
+                                    TargetName="_Hour1TextBlock"
+                                    Value="Transparent" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

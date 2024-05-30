@@ -45,5 +45,10 @@
     <Compile Include="MyPage.fs" />
     <Compile Include="AssemblyInfo.fs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Converters.cs" />
+    <None Include="RetroClock.cs" />
+    <None Include="RetroClock.xaml" />
+  </ItemGroup>
   <Import Project="$(FSharpTargetsPath)" />
 </Project>
